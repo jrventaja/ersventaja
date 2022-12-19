@@ -4,11 +4,26 @@ defmodule Ersventaja.Policies do
   alias Ersventaja.Policies.Adapters.ResponseAdapter
   alias Ersventaja.Policies.Models.Insurer
   alias Ersventaja.Policies.Models.Policy
+
+  import Ecto.Changeset, only: [change: 2]
   @bucket "policiesrsventaja"
   @region "sa-east-1"
   @regex ~r/[^\w]/
 
   import Ecto.Query
+
+  def add_insurer(id, name) do
+    Repo.insert!(%Insurer{
+      id: id,
+      name: name
+    })
+  end
+
+  def add_insurer(name) do
+    Repo.insert!(%Insurer{
+      name: name
+    })
+  end
 
   def get_insurers() do
     Repo.all(Insurer)
@@ -37,7 +52,13 @@ defmodule Ersventaja.Policies do
   end
 
   def delete_policy(id) do
-   Repo.one!(Policy, id: String.to_integer(id))
+    policy = Repo.one!(Policy, id: String.to_integer(id))
+    file_name = get_file_name(policy.id)
+
+    ExAws.S3.delete_object(@bucket, file_name)
+    |> ExAws.request!(region: @region)
+
+    Repo.delete!(policy)
   end
 
   def last_30_days do
@@ -45,8 +66,9 @@ defmodule Ersventaja.Policies do
     next_month = Date.add(today, 30)
 
     query =
-      from p in Policy,
+      from(p in Policy,
         where: p.end_date >= ^today and p.end_date <= ^next_month
+      )
 
     policies_from_query(query)
   end
@@ -59,19 +81,27 @@ defmodule Ersventaja.Policies do
     case String.to_atom(current_only) do
       true ->
         query =
-          from p in Policy,
+          from(p in Policy,
             where:
               p.start_date <= ^today and p.end_date >= ^today and like(p.customer_name, ^like)
+          )
 
         policies_from_query(query)
 
       _ ->
         query =
-          from p in Policy,
+          from(p in Policy,
             where: like(p.customer_name, ^like)
+          )
 
         policies_from_query(query)
     end
+  end
+
+  def update_status(id, status) do
+    Repo.one!(Policy, id: String.to_integer(id))
+    |> change(calculated: status)
+    |> Repo.update!()
   end
 
   defp policies_from_query(query) do

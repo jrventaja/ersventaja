@@ -18,4 +18,8 @@ defmodule ErsventajaWeb.PolicyController do
   def delete(conn, %{"id" => id}) do
     resp_json(conn, Policies.delete_policy(id))
   end
+
+  def update_status(conn, %{"id" => id, "status" => status}) do
+    resp_json(conn, Policies.update_status(id, status))
+  end
 end

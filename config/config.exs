@@ -29,9 +29,10 @@ config :ersventaja, Ersventaja.Mailer, adapter: Swoosh.Adapters.Local
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false
 
-config :ersventaja, Ersventaja.Guardian,
+config :ersventaja, Ersventaja.UserManager.Guardian,
   issuer: "ersventaja",
-  secret_key: "ms0N/C/7HspkmHTV61lXONlVc9mXyC2zFuSF42rpH/izrCpgZ3v2iZi51sJrBJOG"
+  secret_key: "ms0N/C/7HspkmHTV61lXONlVc9mXyC2zFuSF42rpH/izrCpgZ3v2iZi51sJrBJOG",
+  ttl: {2, :hours}
 
 # Configure esbuild (the version is required)
 config :esbuild,

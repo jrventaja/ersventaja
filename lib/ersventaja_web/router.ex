@@ -5,22 +5,24 @@ defmodule ErsventajaWeb.Router do
   use ErsventajaWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {ErsventajaWeb.LayoutView, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {ErsventajaWeb.LayoutView, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
+  end
+
+  pipeline :auth do
+    plug(Ersventaja.UserManager.Pipeline)
   end
 
   scope "/", ErsventajaWeb do
-    pipe_through :browser
-
-    get "/", PageController, :index
+    pipe_through(:browser)
   end
 
   # Other scopes may use custom stacks.
@@ -39,9 +41,9 @@ defmodule ErsventajaWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: ErsventajaWeb.Telemetry
+      live_dashboard("/dashboard", metrics: ErsventajaWeb.Telemetry)
     end
   end
 
@@ -51,20 +53,26 @@ defmodule ErsventajaWeb.Router do
   # node running the Phoenix server.
   if Mix.env() == :dev do
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 
   scope "/api" do
-    pipe_through :api
+    pipe_through(:api)
 
-    post "/login", AuthenticationController, :login
-    get "/insurers", InsurerController, :list
-    post "/policies", PolicyController, :create
-    get "/policies/last-30-days", PolicyController, :last_30_days
-    get "/policies", PolicyController, :get_policies
-    delete "/policies/{id}", PolicyController, :delete
+    post("/login", AuthenticationController, :login)
+
+    scope "/" do
+      pipe_through(:auth)
+      post("/insurers", InsurerController, :create)
+      get("/insurers", InsurerController, :list)
+      post("/policies", PolicyController, :create)
+      put("/policies/:id", PolicyController, :update_status)
+      get("/policies/last-30-days", PolicyController, :last_30_days)
+      get("/policies", PolicyController, :get_policies)
+      delete("/policies/:id", PolicyController, :delete)
+    end
   end
 end

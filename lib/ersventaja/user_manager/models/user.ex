@@ -19,6 +19,6 @@ defmodule Ersventaja.UserManager.Models.User do
   end
 
   defp hash_password(%{username: username, password: password}) do
-    %{username: username, password: Argon2.hash_pwd_salt(password)}
+    %{username: username, password: Bcrypt.hash_pwd_salt(password)}
   end
 end

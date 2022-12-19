@@ -12,8 +12,9 @@ defmodule ErsventajaWeb.AuthenticationController do
 
   defp login_reply({:ok, user}, conn) do
     authed_conn = Guardian.Plug.sign_in(conn, user)
+
     authed_conn
-    |> send_resp(200, build_token_response(Guardian.Plug.current_token(authed_conn)))
+    |> resp_json(build_token_response(Guardian.Plug.current_token(authed_conn)))
   end
 
   defp login_reply({:error, _reason}, conn) do
@@ -21,5 +22,5 @@ defmodule ErsventajaWeb.AuthenticationController do
     |> send_resp(401, "unauthorized")
   end
 
-  defp build_token_response(token), do: Jason.encode!(%{access_token: token})
+  defp build_token_response(token), do: %{access_token: token}
 end
