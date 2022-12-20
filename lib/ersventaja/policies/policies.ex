@@ -52,7 +52,7 @@ defmodule Ersventaja.Policies do
   end
 
   def delete_policy(id) do
-    policy = Repo.one!(Policy, id: String.to_integer(id))
+    policy = Repo.get_by!(Policy, id: String.to_integer(id))
     file_name = get_file_name(policy.id)
 
     ExAws.S3.delete_object(@bucket, file_name)
@@ -76,14 +76,15 @@ defmodule Ersventaja.Policies do
   def get_policies(current_only, name) do
     today = Date.utc_today()
 
-    like = "%#{name |> String.split(" ") |> Enum.join("%")}%"
+    like = "%#{String.downcase(name) |> String.split(" ") |> Enum.join("%")}%"
 
     case String.to_atom(current_only) do
       true ->
         query =
           from(p in Policy,
             where:
-              p.start_date <= ^today and p.end_date >= ^today and like(p.customer_name, ^like)
+              p.start_date <= ^today and p.end_date >= ^today and
+                like(fragment("lower(?)", p.customer_name), ^like)
           )
 
         policies_from_query(query)
@@ -91,7 +92,7 @@ defmodule Ersventaja.Policies do
       _ ->
         query =
           from(p in Policy,
-            where: like(p.customer_name, ^like)
+            where: like(fragment("lower(?)", p.customer_name), ^like)
           )
 
         policies_from_query(query)
