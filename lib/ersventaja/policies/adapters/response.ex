@@ -13,7 +13,10 @@ defmodule Ersventaja.Policies.Adapters.ResponseAdapter do
          file_name: file_name,
          id: id,
          insurer_id: insurer_id,
-         start_date: start_date
+         start_date: start_date,
+         insurer: %{
+           name: insurer_name
+         }
        }),
        do: %{
          calculated: calculated,
@@ -23,6 +26,7 @@ defmodule Ersventaja.Policies.Adapters.ResponseAdapter do
          file_name: file_name,
          id: id,
          insurer_id: insurer_id,
+         insurer: insurer_name,
          start_date: start_date
        }
 end

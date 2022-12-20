@@ -107,6 +107,7 @@ defmodule Ersventaja.Policies do
   defp policies_from_query(query) do
     query
     |> Repo.all()
+    |> Repo.preload([:insurer])
     |> Enum.map(&Map.merge(&1, %{file_name: get_file_name(&1.id)}))
     |> ResponseAdapter.get_policy_response()
   end
