@@ -15,7 +15,8 @@ defmodule Ersventaja.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Ersventaja.PubSub},
       # Start the Endpoint (http/https)
-      ErsventajaWeb.Endpoint
+      ErsventajaWeb.Endpoint,
+      Ersventaja.BackupJob
       # Start a worker by calling: Ersventaja.Worker.start_link(arg)
       # {Ersventaja.Worker, arg}
     ]
