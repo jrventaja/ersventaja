@@ -25,7 +25,7 @@ services:
       - "4000:4000"
     volumes:
       - .:/app
-      - exclude:/app/web/node_modules
+      - /app/web/node_modules
   rsventajaweb:
     container_name: rsventajaweb
     build: ./web
@@ -51,4 +51,3 @@ services:
       - /etc/letsencrypt/live/rsventaja.com/privkey.pem:/ssh/privkey.pem
 volumes:
   pgdata:
-  exclude:
