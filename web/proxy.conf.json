@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://rsventaja.com:4000",
+    "secure": true,
+    "changeOrigin": true
+  }
+}

@@ -1,18 +1,20 @@
-version: '3.6'
+version: "3.6"
 services:
   db:
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-    image: 'postgres:11-alpine'
+    container_name: db
+    image: "postgres:11-alpine"
     restart: always
     volumes:
-      - 'pgdata:/var/lib/postgresql/data'
+      - "pgdata:/var/lib/postgresql/data"
     ports:
-      - '5432:5432'
+      - "5432:5432"
   ersventaja:
     build: .
+    container_name: ersventaja
     depends_on:
       - db
     environment:
@@ -20,8 +22,28 @@ services:
     env_file:
       - .env
     ports:
-      - '4000:4000'
+      - "4000:4000"
     volumes:
       - .:/app
+  rsventajaweb:
+    container_name: rsventajaweb
+    build: ./web
+    volumes:
+      - "./web:/usr/src/app"
+    ports:
+      - "4200:4200"
+    command: >
+      bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
+  nginx:
+    image: nginx:latest
+    container_name: webserver
+    restart: unless-stopped
+    depends_on:
+      - rsventajaweb
+      - ersventaja
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf
 volumes:
   pgdata:

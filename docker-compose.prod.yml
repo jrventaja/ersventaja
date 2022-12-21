@@ -1,18 +1,20 @@
-version: '3.6'
+version: "3.6"
 services:
   db:
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-    image: 'postgres:11-alpine'
+    container_name: db
+    image: "postgres:11-alpine"
     restart: always
     volumes:
-      - 'pgdata:/var/lib/postgresql/data'
+      - "pgdata:/var/lib/postgresql/data"
     ports:
-      - '5432:5432'
+      - "5432:5432"
   ersventaja:
     build: .
+    container_name: ersventaja
     depends_on:
       - db
     environment:
@@ -20,10 +22,31 @@ services:
     env_file:
       - .env
     ports:
-      - '4000:4000'
+      - "4000:4000"
     volumes:
-      - /etc/letsencrypt/live/rsventaja.com/cert.pem:/ssh/cert.pem
-      - /etc/letsencrypt/live/rsventaja.com/privkey.pem:/ssh/privkey.pem
       - .:/app
+  rsventajaweb:
+    container_name: rsventajaweb
+    build: ./web
+    volumes:
+      - "./web:/usr/src/app"
+    ports:
+      - "4200:4200"
+    command: >
+      bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
+  nginx:
+    image: nginx:latest
+    container_name: webserver
+    depends_on:
+      - rsventajaweb
+      - ersventaja
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt/live/rsventaja.com/fullchain.pem:/ssh/fullchain.pem
+      - /etc/letsencrypt/live/rsventaja.com/privkey.pem:/ssh/privkey.pem
 volumes:
   pgdata:

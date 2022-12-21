@@ -1,0 +1,214 @@
+<div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1em">
+  <nav class="navbar navbar-expand-lg">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px" class="navbar-collapse">
+      <ul class="navbar-nav">
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <li>
+            <a class="nav-link" href="#sobre">Quem somos</a>
+          </li>
+          <li>
+            <a class="nav-link" href="#produtos">Produtos</a>
+          </li>
+          <li>
+            <a class="nav-link" href="#seguradoras">Seguradoras</a>
+          </li>
+          <li>
+            <a class="nav-link" href="#contato">Contato</a>
+          </li>
+          <li>
+            <a class="nav-link" routerLink="/login">Painel de Controle</a>
+          </li>
+        </div>
+      </ul>
+    </div>
+  </nav>
+  <div fxLayout="row" fxLayoutAlign="center center" class="jumbotron">
+    <img alt="RS Ventaja" class="logobig" src="../assets/rsventajaheader.png" width="200" height="200" style="position:absolute">
+  </div>
+</div>
+
+<div fxLayout="column" role="main" fxLayoutAlign="start center">
+  <div fxLayout="row">
+    <div id="sobre" class="aboutsection" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1.5em">
+      <div class="title">Quem somos</div>
+      <div class="abouttext">
+        No mercado há 20 anos, trabalhamos com atenção especial às necessidades individuais do cliente. Temos orgulho em
+        construir relações de confiança, possuindo clientes satisfeitos pelo nosso atendimento personalizado e bem
+        amparados pelas coberturas que oferecemos.
+      </div>
+    </div>
+  </div>
+  <div id="produtos" class="productsection">
+    <div class="slideanim">
+      <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="1.5em">
+        <div class="slideanim" class="title">Produtos</div>
+        <div class="slideanim" fxLayout="row" fxLayoutAlign="space-evenly center">
+          <div class="productbox" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="12px">
+            <div class="subtitle">Seguro de Automóvel</div>
+            <fa-icon class="fa-5x productimage" [icon]="faCar"
+              tooltipClass="tooltip-class" ngbTooltip="É o seguro para carros, caminhões, motocicletas e outros veículos rodoviários. Seu principal uso é fornecer proteção financeira contra danos físicos ou lesões corporais resultantes de colisões no trânsito e contra a responsabilidade que também pode resultar de incidentes em um veículo.">
+            </fa-icon>
+            <p class="subtitledesc">Cobertura e assistência 24h</p>
+            <a style="color: rgb(19, 19, 19);"
+              href="https://wwws.portoseguro.com.br/vendaonline/automovel/home.ns?cod=3f559c36a4824742a4b2ce6c6ca42463&utm_source=43254J&utm_medium=geradorLinks&utm_campaign=GeradordeLinks_AIQ7YJ&utm_content=RS_VENTAJA_CORRETORA_DE_SEGUROS_LTDA&origem=Site"
+              target="_blank">
+              <button mat-raised-button color="primary">
+                Faça uma cotação
+              </button></a>
+          </div>
+          <div class="productbox" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="12px">
+            <div class="subtitle">Seguro Residencial</div>
+            <fa-icon class="fa-5x productimage" [icon]="faHome"
+              tooltipClass="tooltip-class" ngbTooltip="Protege a estrutura da casa e o que está dentro do imóvel. Oferece ainda serviços de manutenção e reparos.">
+            </fa-icon>
+            <p class="subtitledesc">...também para sua casa!</p>
+            <a style="color: rgb(19, 19, 19);"
+              href="https://wwws.portoseguro.com.br/vendaonline/residencia/home.ns?cod=b316cc04aab441c2b853e91f7c31b6fe&utm_source=43254J&utm_medium=geradorLinks&utm_campaign=GeradordeLinks_AIQ7YJ&utm_content=RS_VENTAJA_CORRETORA_DE_SEGUROS_LTDA&origem=Site"
+              target="_blank">
+              <button mat-raised-button color="primary">
+                Faça uma cotação
+              </button></a>
+          </div>
+          <div class="productbox" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="12px">
+            <div class="subtitle">Seguro Empresarial</div>
+            <fa-icon class="fa-5x productimage" [icon]="faBuilding"
+              tooltipClass="tooltip-class" ngbTooltip="Oferece diversas coberturas para funcionários, finanças e patrimônio do seu negócio.">
+            </fa-icon>
+            <p class="subtitledesc">...e sua empresa!</p>
+            <a style="color: rgb(19, 19, 19);" href="#contato">
+              <button mat-raised-button color="primary">
+                Faça uma cotação
+              </button></a>
+          </div>
+        </div>
+        <div class="slideanim" fxLayout="row" fxLayoutAlign="space-evenly center">
+          <div class="productbox" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="12px">
+            <div class="subtitle">Responsabilidade Civil</div>
+            <fa-icon class="fa-5x productimage" [icon]="faBriefcase"
+              tooltipClass="tooltip-class" ngbTooltip="Cobre indenizações por danos realizados contra outrem, pelo segurado ou por terceiros tutelados ou sob sua responsabilidade.">
+            </fa-icon>
+            <p class="subtitledesc">Pra quando tudo dá errado</p>
+            <a style="color: rgb(19, 19, 19);" href="#contato">
+              <button mat-raised-button color="primary">
+                Faça uma cotação
+              </button></a>
+          </div>
+          <div class="productbox" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="12px">
+            <div class="subtitle">Seguro de Vida</div>
+            <fa-icon class="fa-5x productimage" [icon]="faHeartbeat"
+              tooltipClass="tooltip-class" ngbTooltip="O seguro de vida é um contrato entre o titular da apólice de seguro e uma seguradora ou seguradora, em que a seguradora promete pagar a um beneficiário designado uma quantia em dinheiro em troca de um prêmio, com a morte de uma pessoa segurada.">
+            </fa-icon>
+            <p class="subtitledesc">Preocupação com a sua família</p>
+            <a style="color: rgb(19, 19, 19);"
+              href="https://wwws.portoseguro.com.br/vendaonline/vidamaissimples/home.ns?cod=f4c49db5b36c4ad0a84c46770bdf1454&utm_source=43254J&utm_medium=geradorLinks&utm_campaign=GeradordeLinks_AIQ7YJ&utm_content=RS_VENTAJA_CORRETORA_DE_SEGUROS_LTDA&origem=Site"
+              target="_blank">
+              <button mat-raised-button color="primary">
+                Faça uma cotação
+              </button></a>
+          </div>
+          <div class="productbox" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="12px">
+            <div class="subtitle">Riscos Diversos</div>
+            <fa-icon class="fa-5x productimage" [icon]="faMobileAlt"
+              tooltipClass="tooltip-class" ngbTooltip="O ramo de Riscos Diversos visa atender necessidades específicas de cobertura não encontradas nos ramos tradicionais de seguros. Desse modo, oferece várias modalidades e diversas coberturas para os riscos de perdas e danos materiais decorrentes de causa externa, exceto aqueles expressamente excluídos.">
+            </fa-icon>
+            <p class="subtitledesc">Seus equipamentos protegidos</p>
+            <a style="color: rgb(19, 19, 19);"
+              href="https://wwws.portoseguro.com.br/vendaonline/equipamentosportateis/home.ns?cod=0ba8daaf22d945eea030713c4ce34678&utm_source=43254J&utm_medium=geradorLinks&utm_campaign=GeradordeLinks_AIQ7YJ&utm_content=RS_VENTAJA_CORRETORA_DE_SEGUROS_LTDA&origem=Site"
+              target="_blank">
+              <button mat-raised-button color="primary">
+                Faça uma cotação
+              </button></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="seguradoras" class="insurersection">
+    <div class="slideanim">
+      <div fxLayout="column" fxLayoutAlign="center stretch" fxLayoutGap="3em">
+        <div class="slideanim" class="title" fxLayout="row" fxLayoutAlign="center center">Seguradoras</div>
+        <div class="slideanim" fxLayout="row" fxLayoutAlign="space-evenly center">
+          <div class="insurerbox" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <a href="https://www.portoseguro.com.br/" target="_blank">
+              <img alt="Porto Seguro" src="../assets/porto.jpg" class="img-circle" width="60" height="60">
+            </a>
+            <p>Porto Seguro</p>
+          </div>
+          <div class="insurerbox" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <a href="https://www.segurosunimed.com.br/" target="_blank">
+              <img alt="Unimed" src="../assets/unimed.jpg" class="img-circle" width="60" height="60">
+            </a>
+            <p>Unimed</p>
+          </div>
+          <div class="insurerbox" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <a href="https://www.mapfre.com.br/" target="_blank">
+              <img alt="Mapfre" src="../assets/mapfre.png" class="img-circle" width="60" height="60">
+            </a>
+            <p>Mapfre</p>
+          </div>
+        </div>
+        <div class="slideanim" fxLayout="row" fxLayoutAlign="space-evenly center">
+          <div class="insurerbox" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <a href="https://www.azulseguros.com.br/" target="_blank">
+              <img alt="Azul" src="../assets/azul.jpg" class="img-circle" width="60" height="60">
+            </a>
+            <p>Azul</p>
+          </div>
+          <div class="insurerbox" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <a href="https://www.hdiseguros.com.br/" target="_blank">
+              <img alt="HDI" src="../assets/hdi.jpg" class="img-circle" width="60" height="60">
+            </a>
+            <p>HDI</p>
+          </div>
+          <div class="insurerbox" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <a href="https://portal.sulamericaseguros.com.br/" target="_blank">
+              <img alt="SulAmérica" src="../assets/sulamerica.png" class="img-circle" width="60" height="60">
+            </a>
+            <p>SulAmérica</p>
+          </div>
+        </div>
+        <div class="slideanim" fxLayout="row" fxLayoutAlign="space-evenly center">
+          <div class="insurerbox" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <a href="https://www.itau.com.br/seguros/" target="_blank">
+              <img alt="Itaú" src="../assets/itau.png" class="img-circle" width="60" height="60">
+            </a>
+            <p>Itaú</p>
+          </div>
+          <div class="insurerbox" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <a href="https://www.tokiomarine.com.br/" target="_blank">
+              <img alt="Tokio Marine" src="../assets/tokiomarine.png" class="img-circle" width="60" height="60">
+            </a>
+            <p>Tokio Marine</p>
+          </div>
+          <div class="insurerbox" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <a href="https://sompo.com.br/" target="_blank">
+              <img alt="Sompo" src="../assets/sompo.png" class="img-circle" width="60" height="60">
+            </a>
+            <p>Sompo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="contato" class="contactsection">
+    <div class="slideanim">
+      <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1.5em">
+        <div class="slideanim" class="title">Contato</div>
+        <div fxLayout="row">
+          <div fxLayout="column" fxLayoutAlign="start center">
+            <p>Roberto Ventaja</p>
+            <p style="color:grey">Corretor de Seguros</p>
+            <p>roberto@rsventaja.com <a href="mailto:roberto@rsventaja.com">
+                <fa-icon style="color:grey" [icon]="faEnvelope"></fa-icon>
+              </a></p>
+          </div>
+        </div>
+        <a href="#" title="To Top">
+          <fa-icon class="fa-2x red" style="color:grey" [icon]="faArrowUp"></fa-icon>
+        </a>
+      </div>
+    </div>    
+  </div>
+</div>

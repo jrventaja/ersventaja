@@ -1,0 +1,252 @@
+<nav class="navbar navbar-expand-lg">
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px" class="navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="">Página Inicial</a>
+          </li>
+        </ul>
+  </div>
+</nav>
+<div class="jumbotron text-center">
+  <img alt="RS Ventaja" src="../assets/rsventajaheader.png" width="200" height="200">
+</div>
+<ng-container *ngIf="signedin">
+  <mat-tab-group>
+    <mat-tab label="Apólices a vencer">
+      <div *ngIf="policies$ | async as pols" class="content container-fluid">
+        <div class="title">Apólices com vencimento nos próximos 30 dias</div>
+        <table mat-table [dataSource]="pols" class="mat-elevation-z2">
+          <ng-container matColumnDef="renewal">
+            <th mat-header-cell *matHeaderCellDef>Calculado?</th>
+            <td mat-cell *matCellDef="let element">
+              <mat-checkbox #checkbox color="primary" [checked]="element.calculated"
+                (click)="updateRenewalStarted(element.id, checkbox.checked)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="days">
+            <th mat-header-cell *matHeaderCellDef>Dias Restantes</th>
+            <td mat-cell *matCellDef="let element"> {{ calculateDays(element.end_date) }} </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nome</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.customer_name }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="insurer">
+            <th mat-header-cell *matHeaderCellDef>Seguradora</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.insurer }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="additional">
+            <th mat-header-cell *matHeaderCellDef>Informações Adicionais</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.detail }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="start">
+            <th mat-header-cell *matHeaderCellDef>Início</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.start_date | date:'shortDate':'':'pt-BR' }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="end">
+            <th mat-header-cell *matHeaderCellDef>Vencimento</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.end_date | date:'shortDate':'':'pt-BR' }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="download">
+            <th mat-header-cell *matHeaderCellDef>Ação</th>
+            <td mat-cell *matCellDef="let element">
+              <a mat-flat-button color="primary" href="{{fileUrl(element.file_name)}}" target="_blank">Abrir</a>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-tab>
+    <mat-tab label="Buscar apólices vigentes">
+      <div class="content container-fluid contain">
+        <ngb-alert *ngIf="displayQueryCurrent" (close)="closeQueryCurrent()">Favor preencher o nome para realizar a
+          busca.</ngb-alert>
+        <div class="title">Buscar apólices vigentes</div>
+        <form [formGroup]="queryCurrentForm" (ngSubmit)="onCurrentPoliciesSubmit(queryCurrentForm)">
+          <div fxLayout="column" fxLayoutAlign="start start">
+            <mat-form-field style="width:400px !important" appearance="fill">
+              <mat-label>Digite parte ou o nome do cliente</mat-label>
+              <input matInput type="text" formControlName="query">
+            </mat-form-field>
+            <div style="padding-left: 0.5em">
+              <button mat-raised-button color="primary" type="submit">Buscar</button>
+            </div>
+          </div>
+        </form><br><br>
+        <table *ngIf="queryCurrentPolicies$ | async as cpols" mat-table [dataSource]="cpols" class="mat-elevation-z2">
+          <ng-container matColumnDef="days">
+            <th mat-header-cell *matHeaderCellDef>Dias Restantes</th>
+            <td mat-cell *matCellDef="let element"> {{ calculateDays(element.end_date) }} </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nome</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.customer_name }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="insurer">
+            <th mat-header-cell *matHeaderCellDef>Seguradora</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.insurer }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="additional">
+            <th mat-header-cell *matHeaderCellDef>Informações Adicionais</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.detail }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="start">
+            <th mat-header-cell *matHeaderCellDef>Início</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.start_date | date:'shortDate':'':'pt-BR' }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="end">
+            <th mat-header-cell *matHeaderCellDef>Vencimento</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.end_date | date:'shortDate':'':'pt-BR' }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="download">
+            <th mat-header-cell *matHeaderCellDef>Ação</th>
+            <td mat-cell *matCellDef="let element">
+              <a mat-flat-button color="primary" href="{{fileUrl(element.file_name)}}" target="_blank">Abrir</a>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsCurrent"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsCurrent;"></tr>
+        </table>
+      </div>
+    </mat-tab>
+    <mat-tab label="Buscar apólices">
+      <div class="content container-fluid contain">
+        <ngb-alert *ngIf="displayQueryAll" (close)="closeQueryAll()">Favor preencher o nome para realizar a busca.
+        </ngb-alert>
+        <div class="title">Buscar apólices</div>
+        <form [formGroup]="queryForm" style="text-align: center" (ngSubmit)="onPoliciesSubmit(queryForm)">
+          <div fxLayout="column" fxLayoutAlign="start start">
+            <mat-form-field style="width:400px !important" fxFlex appearance="fill">
+              <mat-label>Digite parte ou o nome do cliente</mat-label>
+              <input matInput type="text" formControlName="query">
+            </mat-form-field>
+            <div style="padding-left: 0.5em;">
+              <button mat-raised-button color="primary" type="submit">Buscar</button>
+            </div>
+          </div>
+        </form><br><br>
+        <table *ngIf="queryPolicies$ | async as apols" mat-table [dataSource]="apols" class="mat-elevation-z2">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nome</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.customer_name }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="insurer">
+            <th mat-header-cell *matHeaderCellDef>Seguradora</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.insurer }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="additional">
+            <th mat-header-cell *matHeaderCellDef>Informações Adicionais</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.detail }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="start">
+            <th mat-header-cell *matHeaderCellDef>Início</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.start_date | date:'shortDate':'':'pt-BR' }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="end">
+            <th mat-header-cell *matHeaderCellDef>Vencimento</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.end_date | date:'shortDate':'':'pt-BR' }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="download">
+            <th mat-header-cell *matHeaderCellDef>Abrir</th>
+            <td mat-cell *matCellDef="let element">
+              <a mat-flat-button color="primary" href="{{fileUrl(element.file_name)}}" target="_blank">Abrir</a>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef>Excluir</th>
+            <td mat-cell *matCellDef="let element">
+              <a mat-flat-button color="accent" (click)="delete(element.id, element.file_name)" target="_blank">Excluir</a>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsAll"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsAll;"></tr>
+        </table>
+      </div>
+    </mat-tab>
+    <mat-tab label="Cadastrar apólice">
+      <div class="content2 container-fluid contain mat-elevation-z2">
+        <ngb-alert *ngIf="displayAlert" (close)="close()">Favor preencher todos os campos antes de prosseguir!
+        </ngb-alert>
+        <ngb-alert type="success" *ngIf="displaySuccess" (close)="close()">Cadastro realizado com sucesso!
+        </ngb-alert>
+        <div class="title">Cadastrar apólice</div>
+        <div class="center">
+          <mat-progress-spinner *ngIf="addingPolicy" style="margin:0 auto;" class="example-margin" color="primary"
+            mode="indeterminate">
+          </mat-progress-spinner>
+        </div>
+        <form [formGroup]="insertForm" (ngSubmit)="onInsertSubmit(insertForm)">
+          <div fxLayout="column">
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Nome do proponente</mat-label>
+              <input matInput type="text" formControlName="name">
+            </mat-form-field>
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Seguradora</mat-label>
+              <mat-select formControlName="insurer">
+                <mat-option *ngFor="let insurer of insurers$ | async" [value]="insurer.id">{{ insurer.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Informações adicionais</mat-label>
+              <input matInput type="text" maxlength="50" formControlName="additionalInfo">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Data de <b>início</b> de vigência</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="startDate">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Data de <b>fim</b> de vigência</mat-label>
+              <input matInput [matDatepicker]="picker2" formControlName="endDate">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+            <div fxLayout="row" fxLayoutAlign="space-evenly center">
+              <mat-form-field class="full-width" appearance="fill">
+                <ngx-mat-file-input valuePlaceholder="danger" accept=".pdf" formControlName="file"
+                  (change)="handleUpload()">
+                </ngx-mat-file-input>
+              </mat-form-field>
+            </div>
+            <button class="full-width" mat-raised-button color="primary" type="submit">Cadastrar</button>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>
