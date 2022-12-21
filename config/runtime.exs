@@ -54,9 +54,9 @@ if config_env() == :prod do
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :ersventaja, ErsventajaWeb.Endpoint,
-    url: [host: host, port: 443, scheme: "https"],
+    url: [host: host, port: port, scheme: "https"],
     https: [
-      port: 443,
+      port: 4000,
       cipher_suite: :strong,
       otp_app: :ersventaja,
       keyfile: System.get_env("SSL_KEY_PATH"),

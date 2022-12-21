@@ -54,7 +54,8 @@ defmodule Ersventaja.MixProject do
       {:bcrypt_elixir, "~> 3.0.1"},
       {:hackney, "~> 1.9"},
       {:ex_aws, "~> 2.1"},
-      {:ex_aws_s3, "~> 2.0"}
+      {:ex_aws_s3, "~> 2.0"},
+    {:cors_plug, "~> 3.0"}
     ]
   end
 

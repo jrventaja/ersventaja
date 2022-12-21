@@ -22,7 +22,8 @@ services:
     ports:
       - '4000:4000'
     volumes:
-      - /etc/letsencrypt/live/rsventaja.com:/ssh
+      - /etc/letsencrypt/live/rsventaja.com/cert.pem:/ssh/cert.pem
+      - /etc/letsencrypt/live/rsventaja.com/privkey.pem:/ssh/privkey.pem
       - .:/app
 volumes:
   pgdata:
