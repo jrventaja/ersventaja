@@ -61,7 +61,8 @@ if config_env() == :prod do
       otp_app: :ersventaja,
       keyfile: System.get_env("SSL_KEY_PATH"),
       certfile: System.get_env("SSL_CERT_PATH")
-    ]
+    ],
+    secret_key_base: secret_key_base
 
   # ## Configuring the mailer
   #

@@ -47,6 +47,6 @@ defmodule Ersventaja.BackupJob do
          "#{id};#{customer_name};#{detail};#{insurer_id};#{start_date};#{end_date};#{calculated};#{id}"
 
   defp schedule_work do
-    Process.send_after(self(), :work, 60 * 1000)
+    Process.send_after(self(), :work, 24 * 60 * 60 * 1000)
   end
 end
