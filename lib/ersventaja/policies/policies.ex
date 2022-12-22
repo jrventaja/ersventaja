@@ -100,7 +100,7 @@ defmodule Ersventaja.Policies do
   end
 
   def update_status(id, status) do
-    Repo.one!(Policy, id: String.to_integer(id))
+    Repo.get_by!(Policy, id: String.to_integer(id))
     |> change(calculated: status)
     |> Repo.update!()
   end
