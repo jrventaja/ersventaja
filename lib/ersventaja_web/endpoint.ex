@@ -47,4 +47,5 @@ defmodule ErsventajaWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug ErsventajaWeb.Router
+  plug CORSPlug
 end
