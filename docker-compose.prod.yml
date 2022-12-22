@@ -27,14 +27,12 @@ services:
       - .:/app
       - /app/web/node_modules
   rsventajaweb:
+    image: httpd:latest
     container_name: rsventajaweb
-    build: ./web
     volumes:
-      - "./web:/usr/src/app"
+      - "./html:/usr/local/apache2/htdocs"
     ports:
-      - "4200:4200"
-    command: >
-      bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
+      - "4200:80"
   nginx:
     image: nginx:latest
     container_name: webserver
