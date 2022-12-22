@@ -67,7 +67,7 @@ defmodule Ersventaja.Policies do
 
     query =
       from(p in Policy,
-        where: p.end_date >= ^today and p.end_date <= ^next_month
+        where: p.end_date >= ^today and p.end_date <= ^next_month, order_by: p.end_date
       )
 
     policies_from_query(query)
