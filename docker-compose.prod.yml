@@ -10,6 +10,8 @@ services:
     restart: always
     volumes:
       - "pgdata:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
   ersventaja:
     build: .
     container_name: ersventaja
@@ -19,12 +21,16 @@ services:
       MIX_ENV: prod
     env_file:
       - .env
+    ports:
+      - "4000:4000"
     volumes:
       - .:/app
       - /app/web/node_modules
   rsventajaweb:
-    build: ./web
+    image: httpd:latest
     container_name: rsventajaweb
+    volumes:
+      - "./html:/usr/local/apache2/htdocs"
     ports:
       - "4200:80"
   nginx:

@@ -26,8 +26,10 @@ services:
     volumes:
       - .:/app
   rsventajaweb:
-    build: ./web
+    image: httpd:latest
     container_name: rsventajaweb
+    volumes:
+      - "./html:/usr/local/apache2/htdocs"
     ports:
       - "4200:80"
   nginx:
