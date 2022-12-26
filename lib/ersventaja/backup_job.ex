@@ -10,7 +10,6 @@ defmodule Ersventaja.BackupJob do
   end
 
   def init(state) do
-    Process.send_after(self(), :work, 20 * 1000)
     schedule_work()
     {:ok, state}
   end

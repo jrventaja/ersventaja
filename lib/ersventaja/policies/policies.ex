@@ -85,7 +85,8 @@ defmodule Ersventaja.Policies do
           from(p in Policy,
             where:
               p.start_date <= ^today and p.end_date > ^today and
-                like(fragment("lower(?)", p.customer_name), ^like),
+                (like(fragment("lower(?)", p.customer_name), ^like) or
+                   like(fragment("lower(?)", p.detail), ^like)),
             order_by: p.end_date
           )
 
@@ -94,7 +95,9 @@ defmodule Ersventaja.Policies do
       _ ->
         query =
           from(p in Policy,
-            where: like(fragment("lower(?)", p.customer_name), ^like),
+            where:
+              like(fragment("lower(?)", p.customer_name), ^like) or
+                like(fragment("lower(?)", p.detail), ^like),
             order_by: p.end_date
           )
 
