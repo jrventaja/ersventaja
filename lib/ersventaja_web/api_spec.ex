@@ -11,11 +11,16 @@ defmodule ErsventajaWeb.ApiSpec do
         Server.from_endpoint(Endpoint)
       ],
       info: %Info{
-        title: "My App",
+        title: "Ersventaja API",
         version: "1.0"
       },
       components: %Components{
-        securitySchemes: %{"authorization" => %SecurityScheme{type: "http", scheme: "bearer"}}
+        securitySchemes: %{
+          "bearerAuth" => %SecurityScheme{
+            scheme: "bearer",
+            type: "http"
+          }
+        }
       },
       # Populate the paths from a phoenix router
       paths: Paths.from_router(Router)

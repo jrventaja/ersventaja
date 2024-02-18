@@ -29,4 +29,43 @@ defmodule ErsventajaWeb.Schemas do
       }
     })
   end
+
+  defmodule GetInsurersResponse do
+    OpenApiSpex.schema(%{
+      title: "GetInsurersResponse",
+      description: "A response to get insurers",
+      type: :array,
+      items: %Schema{
+        type: :object,
+        properties: %{
+          id: %Schema{type: :integer, description: "The insurer's id"},
+          name: %Schema{type: :string, description: "The insurer's name"}
+        }
+      }
+    })
+  end
+
+  defmodule CreateInsurerResponse do
+    OpenApiSpex.schema(%{
+      title: "CreateInsurerResponse",
+      description: "A response to create insurer",
+      type: :object,
+      properties: %{
+        id: %Schema{type: :integer, description: "The insurer's id"},
+        name: %Schema{type: :string, description: "The insurer's name"}
+      }
+    })
+  end
+
+  defmodule CreateInsurerRequest do
+    OpenApiSpex.schema(%{
+      title: "CreateInsurerRequest",
+      description: "A request to create an insurer",
+      type: :object,
+      properties: %{
+        id: %Schema{type: :integer, description: "The insurer's id"},
+        name: %Schema{type: :string, description: "The insurer's name"}
+      }
+    })
+  end
 end
