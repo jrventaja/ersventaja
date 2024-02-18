@@ -1,9 +1,8 @@
 defmodule ErsventajaWeb.Schemas do
   alias OpenApiSpex.Schema
+  require OpenApiSpex
 
   defmodule AuthenticationRequest do
-    require OpenApiSpex
-
     OpenApiSpex.schema(%{
       title: "AuthenticationRequest",
       description: "A request to authenticate a user",
@@ -16,6 +15,17 @@ defmodule ErsventajaWeb.Schemas do
             password: %Schema{type: :string, description: "The password"}
           }
         }
+      }
+    })
+  end
+
+  defmodule AuthenticationResponse do
+    OpenApiSpex.schema(%{
+      title: "AuthenticationResponse",
+      description: "An authentication response",
+      type: :object,
+      properties: %{
+        access_token: %Schema{type: :string, description: "JWT token"}
       }
     })
   end

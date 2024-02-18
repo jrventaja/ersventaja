@@ -2,7 +2,7 @@ defmodule ErsventajaWeb.AuthenticationController do
   use ErsventajaWeb, :controller
 
   alias Ersventaja.{UserManager, UserManager.Guardian}
-  alias ErsventajaWeb.Schemas.AuthenticationRequest
+  alias ErsventajaWeb.Schemas.{AuthenticationRequest, AuthenticationResponse}
 
   import Plug.Conn
   use OpenApiSpex.ControllerSpecs
@@ -10,7 +10,9 @@ defmodule ErsventajaWeb.AuthenticationController do
   operation :login,
     description: "Login to the system",
     tags: ["authentication"],
-    responses: [],
+    responses: %{
+      200 => {"Successful login", "application/json", AuthenticationResponse}
+    },
     request_body: {"User params", "application/json", AuthenticationRequest}
 
   def login(conn, %{"user" => %{"username" => username, "password" => password}}) do
