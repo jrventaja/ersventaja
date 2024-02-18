@@ -20,7 +20,8 @@ if System.get_env("PHX_SERVER") do
   config :ersventaja, ErsventajaWeb.Endpoint, server: true
 end
 
-config :ersventaja, :crypto, key: System.get_env("CRYPTO_KEY")
+config :ersventaja, :crypto,
+  key: System.get_env("CRYPTO_KEY", "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
 
 if config_env() == :prod do
   database_url =

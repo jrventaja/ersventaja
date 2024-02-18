@@ -68,4 +68,74 @@ defmodule ErsventajaWeb.Schemas do
       }
     })
   end
+
+  defmodule CreatePolicyRequest do
+    OpenApiSpex.schema(%{
+      title: "CreatePolicyRequest",
+      description: "A request to create a policy",
+      type: :object,
+      properties: %{
+        name: %Schema{type: :string, description: "The customer's name"},
+        detail: %Schema{type: :string, description: "The policy's detail"},
+        start_date: %Schema{type: :string, description: "The policy's start date"},
+        end_date: %Schema{type: :string, description: "The policy's end date"},
+        insurer_id: %Schema{type: :integer, description: "The insurer's id"},
+        encoded_file: %Schema{type: :string, description: "The policy's file"}
+      },
+      example: %{
+        name: "John Doe",
+        detail: "A policy",
+        start_date: "2021-01-01",
+        end_date: "2021-12-31",
+        insurer_id: 1,
+        encoded_file: "YmFzZTY0ZW5jb2RlZGZpbGU="
+      }
+    })
+  end
+
+  defmodule CreatePolicyResponse do
+    OpenApiSpex.schema(%{
+      title: "CreatePolicyResponse",
+      description: "A response to create a policy",
+      type: :object,
+      properties: %{
+        id: %Schema{type: :integer, description: "The policy's id"},
+        customer_name: %Schema{type: :string, description: "The customer's name"},
+        detail: %Schema{type: :string, description: "The policy's detail"},
+        start_date: %Schema{type: :string, description: "The policy's start date"},
+        end_date: %Schema{type: :string, description: "The policy's end date"},
+        calculated: %Schema{type: :boolean, description: "The policy is calculated"}
+      }
+    })
+  end
+
+  defmodule CreatePolicyResponseList do
+    OpenApiSpex.schema(%{
+      title: "CreatePolicyResponseList",
+      description: "A response to create a policy",
+      type: :array,
+      items: %Schema{
+        type: :object,
+        properties: %{
+          id: %Schema{type: :integer, description: "The policy's id"},
+          customer_name: %Schema{type: :string, description: "The customer's name"},
+          detail: %Schema{type: :string, description: "The policy's detail"},
+          start_date: %Schema{type: :string, description: "The policy's start date"},
+          end_date: %Schema{type: :string, description: "The policy's end date"},
+          calculated: %Schema{type: :boolean, description: "The policy is calculated"}
+        }
+      }
+    })
+  end
+
+  defmodule UpdatePolicyStatusRequest do
+    OpenApiSpex.schema(%{
+      title: "UpdatePolicyStatusRequest",
+      description: "A request to update a policy's status",
+      type: :object,
+      properties: %{
+        status: %Schema{type: :boolean, description: "The policy's status"}
+      }
+    })
+  end
 end
