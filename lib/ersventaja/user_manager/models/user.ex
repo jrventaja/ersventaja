@@ -3,8 +3,8 @@ defmodule Ersventaja.UserManager.Models.User do
   import Ecto.Changeset
 
   schema "users" do
-    field :password, :string
-    field :username, :string
+    field(:password, :string)
+    field(:username, :string)
 
     timestamps()
   end

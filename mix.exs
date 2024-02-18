@@ -55,7 +55,8 @@ defmodule Ersventaja.MixProject do
       {:hackney, "~> 1.9"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
-      {:cors_plug, "~> 3.0"}
+      {:cors_plug, "~> 3.0"},
+      {:open_api_spex, "~> 3.18"}
     ]
   end
 

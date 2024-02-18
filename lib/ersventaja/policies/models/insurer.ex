@@ -5,7 +5,7 @@ defmodule Ersventaja.Policies.Models.Insurer do
   @derive {Jason.Encoder, only: [:id, :name]}
 
   schema "insurers" do
-    field :name, :string
+    field(:name, :string)
 
     timestamps()
   end

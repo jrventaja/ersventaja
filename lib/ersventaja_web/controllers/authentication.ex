@@ -2,7 +2,16 @@ defmodule ErsventajaWeb.AuthenticationController do
   use ErsventajaWeb, :controller
 
   alias Ersventaja.{UserManager, UserManager.Guardian}
+  alias ErsventajaWeb.Schemas.AuthenticationRequest
+
   import Plug.Conn
+  use OpenApiSpex.ControllerSpecs
+
+  operation :login,
+    description: "Login to the system",
+    tags: ["authentication"],
+    responses: [],
+    request_body: {"User params", "application/json", AuthenticationRequest}
 
   def login(conn, %{"user" => %{"username" => username, "password" => password}}) do
     UserManager.authenticate_user(username, password)

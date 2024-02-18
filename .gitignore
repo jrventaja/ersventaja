@@ -36,3 +36,4 @@ loan-*.tar
 
 # ElixirLS dir
 /.elixir_ls/
+.DS_Store

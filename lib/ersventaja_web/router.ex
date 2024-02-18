@@ -15,6 +15,7 @@ defmodule ErsventajaWeb.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
+    plug(OpenApiSpex.Plug.PutApiSpec, module: ErsventajaWeb.ApiSpec)
   end
 
   pipeline :auth do
@@ -57,12 +58,15 @@ defmodule ErsventajaWeb.Router do
 
       forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
+
+    get("/swaggerui", OpenApiSpex.Plug.SwaggerUI, path: "/api/openapi")
   end
 
   scope "/api" do
     pipe_through(:api)
 
     post("/login", AuthenticationController, :login)
+    get("/openapi", OpenApiSpex.Plug.RenderSpec, [])
 
     scope "/" do
       pipe_through(:auth)
