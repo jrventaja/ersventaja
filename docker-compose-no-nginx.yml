@@ -1,0 +1,69 @@
+# Ultra-simplified version: No nginx, no Apache!
+# Phoenix serves everything (API + static HTML files)
+# Cloudflare handles SSL termination
+version: "3.8"
+services:
+  db:
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-ersventaja_prod}
+    container_name: db
+    image: "postgres:15-alpine"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - "pgdata:/var/lib/postgresql/data"
+    ports:
+      - "127.0.0.1:5432:5432"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+
+  ersventaja:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: ersventaja
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MIX_ENV: prod
+      PHX_SERVER: "true"
+      PORT: "4000"
+    env_file:
+      - .env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    ports:
+      - "80:4000"  # Expose directly on port 80, Cloudflare handles SSL
+    volumes:
+      - .:/app
+      - /app/web/node_modules
+      - ./html:/app/priv/static/html:ro  # Mount Angular HTML files as static assets
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+volumes:
+  pgdata:
+    driver: local
+

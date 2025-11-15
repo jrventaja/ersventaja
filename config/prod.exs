@@ -12,6 +12,9 @@ import Config
 config :ersventaja, ErsventajaWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
+# Enable serving HTML files from html/ directory (Angular app)
+config :ersventaja, serve_html_files: true
+
 # Do not print debug messages in production
 config :logger, level: :info
 

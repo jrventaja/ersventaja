@@ -79,4 +79,13 @@ defmodule ErsventajaWeb.Router do
       delete("/policies/:id", PolicyController, :delete)
     end
   end
+
+  # Serve Angular app index.html for all non-API routes (SPA fallback)
+  # This must come after the API scope but catch all remaining routes
+  if Application.compile_env(:ersventaja, :serve_html_files, false) do
+    scope "/", ErsventajaWeb do
+      pipe_through(:browser)
+      get("/*path", PageController, :index)
+    end
+  end
 end
