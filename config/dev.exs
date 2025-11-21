@@ -2,9 +2,9 @@ import Config
 
 # Configure your database
 config :ersventaja, Ersventaja.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "db",
+  username: "ersventaja",
+  password: "ersventaja",
+  hostname: "localhost",
   database: "ersventaja_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,

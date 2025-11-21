@@ -56,7 +56,9 @@ defmodule Ersventaja.MixProject do
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
       {:cors_plug, "~> 3.0"},
-      {:open_api_spex, "~> 3.18"}
+      {:open_api_spex, "~> 3.18"},
+      {:tesseract_ocr, "~> 0.1.5"}
+
     ]
   end
 

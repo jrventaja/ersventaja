@@ -4,7 +4,7 @@ defmodule Ersventaja.UserManagerTest do
   alias Ersventaja.UserManager
 
   describe "users" do
-    alias Ersventaja.UserManager.User
+    alias Ersventaja.UserManager.Models.User
 
     import Ersventaja.UserManagerFixtures
 
