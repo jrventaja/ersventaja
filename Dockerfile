@@ -47,34 +47,45 @@ ENV MIX_ENV=${MIX_ENV}
 # Set Erlang flags to help with compilation
 ENV ERL_FLAGS="+JPperf true"
 
-# Fetch and compile dependencies
-# Clean any existing builds to ensure fresh compilation
+# Fetch dependencies
 RUN mix deps.clean --all || true && \
-    mix deps.get --only ${MIX_ENV} && \
-    echo "=== Verifying rebar3 ===" && \
+    mix deps.get --only ${MIX_ENV}
+
+# Verify rebar3 is available
+RUN echo "=== Verifying rebar3 ===" && \
     ls -la /opt/mix/elixir/1-14/rebar3* && \
-    /opt/mix/elixir/1-14/rebar3 --version && \
-    echo "=== Creating necessary paths ===" && \
-    mkdir -p /app/_build/${MIX_ENV}/lib && \
-    echo "=== Compiling all dependencies ===" && \
-    mix deps.compile && \
-    echo "=== Verifying idna was compiled successfully ===" && \
-    test -f _build/${MIX_ENV}/deps/idna/ebin/idna.app || \
-    (echo "=== idna compilation failed, trying manual compilation ===" && \
-     cd _build/${MIX_ENV}/deps/idna && \
-     echo "=== Running rebar3 bare compile ===" && \
-     /opt/mix/elixir/1-14/rebar3 bare compile --paths /app/_build/${MIX_ENV}/lib/*/ebin && \
-     cd /app && \
-     test -f _build/${MIX_ENV}/deps/idna/ebin/idna.app || \
-     (echo "=== Manual compilation also failed ===" && \
-      echo "=== idna directory contents ===" && \
-      ls -la _build/${MIX_ENV}/deps/idna/ && \
-      echo "=== Trying regular rebar3 compile ===" && \
-      cd _build/${MIX_ENV}/deps/idna && \
-      /opt/mix/elixir/1-14/rebar3 compile && \
-      cd /app && \
-      test -f _build/${MIX_ENV}/deps/idna/ebin/idna.app || exit 1)) && \
-    echo "=== All dependencies compiled successfully ==="
+    /opt/mix/elixir/1-14/rebar3 --version
+
+# Create necessary paths
+RUN mkdir -p /app/_build/${MIX_ENV}/lib
+
+# Try to compile dependencies - capture full output
+RUN echo "=== Compiling dependencies ===" && \
+    mix deps.compile 2>&1 | tee /tmp/deps_compile.log || \
+    (echo "=== mix deps.compile failed, output: ===" && \
+     cat /tmp/deps_compile.log && \
+     echo "=== Attempting to compile idna manually ===" && \
+     if [ -d "_build/${MIX_ENV}/deps/idna" ]; then \
+       cd _build/${MIX_ENV}/deps/idna && \
+       echo "=== idna directory: $(pwd) ===" && \
+       ls -la && \
+       echo "=== Running rebar3 bare compile with verbose output ===" && \
+       /opt/mix/elixir/1-14/rebar3 bare compile --paths /app/_build/${MIX_ENV}/lib/*/ebin -v 2>&1 || \
+       (echo "=== bare compile failed, trying regular compile ===" && \
+        /opt/mix/elixir/1-14/rebar3 compile -v 2>&1); \
+     else \
+       echo "=== idna directory not found ===" && \
+       find _build -name idna -type d; \
+     fi && \
+     exit 1)
+
+# Verify idna compiled successfully
+RUN test -f _build/${MIX_ENV}/deps/idna/ebin/idna.app && \
+    echo "=== idna compiled successfully ===" || \
+    (echo "=== ERROR: idna.app not found ===" && \
+     ls -la _build/${MIX_ENV}/deps/idna/ebin/ 2>/dev/null || \
+     echo "ebin directory does not exist" && \
+     exit 1)
 
 # Copy application code
 COPY . .
