@@ -1,12 +1,21 @@
 FROM bitwalker/alpine-elixir-phoenix:1.14
 
 # Install additional build dependencies needed for native compilation
-RUN apk add --no-cache \
+# idna requires these for native compilation via rebar3
+RUN apk add --no-cache --update \
     gcc \
     g++ \
     make \
     libc-dev \
+    erlang-dev \
+    git \
+    curl \
     && rm -rf /var/cache/apk/*
+
+# Install rebar3 if not already available
+# The bitwalker image should have it, but ensure it's accessible
+RUN which rebar3 || (curl -L https://github.com/erlang/rebar3/releases/latest/download/rebar3 -o /usr/local/bin/rebar3 && \
+    chmod +x /usr/local/bin/rebar3)
 
 WORKDIR /app
 
