@@ -6,14 +6,12 @@ RUN apk add --no-cache \
     g++ \
     make \
     libc-dev \
+    erlang-dev \
     && rm -rf /var/cache/apk/*
 
-# Add swap space to prevent OOM during compilation
-# This is critical for compiling native dependencies like idna on memory-constrained systems
-RUN dd if=/dev/zero of=/swapfile bs=1M count=1024 && \
-    chmod 600 /swapfile && \
-    mkswap /swapfile && \
-    swapon /swapfile
+# Set Erlang flags to reduce memory usage during compilation
+# This helps prevent OOM when compiling native dependencies
+ENV ERL_FLAGS="+S 2:2 +A 8"
 
 WORKDIR /app
 
@@ -29,7 +27,11 @@ ARG MIX_ENV=prod
 ENV MIX_ENV=${MIX_ENV}
 
 # Fetch and compile dependencies
+# Compile idna separately first to avoid OOM issues
 RUN mix deps.get --only ${MIX_ENV} && \
+    (mix deps.compile idna || \
+     (echo "=== idna compilation failed, trying with reduced parallelism ===" && \
+      ERL_FLAGS="+S 1:1 +A 4" mix deps.compile idna)) && \
     mix deps.compile
 
 # Copy application code
