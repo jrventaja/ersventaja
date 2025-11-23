@@ -3,6 +3,7 @@ FROM bitwalker/alpine-elixir-phoenix:1.14
 # Install additional build dependencies needed for native compilation
 # idna requires these for native compilation via rebar3
 RUN apk add --no-cache --update \
+    build-base \
     gcc \
     g++ \
     make \
@@ -10,17 +11,26 @@ RUN apk add --no-cache --update \
     erlang-dev \
     git \
     curl \
+    ncurses-dev \
     && rm -rf /var/cache/apk/*
-
-# Install rebar3 if not already available
-# The bitwalker image should have it, but ensure it's accessible
-RUN which rebar3 || (curl -L https://github.com/erlang/rebar3/releases/latest/download/rebar3 -o /usr/local/bin/rebar3 && \
-    chmod +x /usr/local/bin/rebar3)
 
 WORKDIR /app
 
 # Install Hex and Rebar
 RUN mix do local.hex --force, local.rebar --force
+
+# Ensure rebar3 is available
+# The bitwalker image should have rebar3 at /opt/mix/elixir/1-14/rebar3
+# Make sure it exists and is executable, or install it
+RUN if [ -f /opt/mix/elixir/1-14/rebar3 ]; then \
+    chmod +x /opt/mix/elixir/1-14/rebar3 && \
+    /opt/mix/elixir/1-14/rebar3 --version || echo "rebar3 at expected location failed"; \
+    elif ! command -v rebar3 &> /dev/null; then \
+    curl -L https://github.com/erlang/rebar3/releases/latest/download/rebar3 -o /opt/mix/elixir/1-14/rebar3 && \
+    chmod +x /opt/mix/elixir/1-14/rebar3; \
+    fi && \
+    echo "rebar3 check:" && \
+    (rebar3 --version || /opt/mix/elixir/1-14/rebar3 --version || echo "rebar3 not found")
 
 # Copy dependency files
 COPY mix.exs .
@@ -32,6 +42,10 @@ ENV MIX_ENV=${MIX_ENV}
 
 # Fetch and compile dependencies
 RUN mix deps.get --only ${MIX_ENV} && \
+    echo "=== Verifying rebar3 ===" && \
+    ls -la /opt/mix/elixir/1-14/rebar3* || echo "rebar3 not at expected path" && \
+    /opt/mix/elixir/1-14/rebar3 --version || echo "rebar3 version check failed" && \
+    echo "=== Compiling dependencies ===" && \
     mix deps.compile
 
 # Copy application code
