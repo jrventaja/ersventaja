@@ -1,6 +1,7 @@
 defmodule ErsventajaWeb.InsurersLive do
   use ErsventajaWeb, :live_view
   import ErsventajaWeb.Components.Navbar
+  import ErsventajaWeb.Components.Hero
 
   def mount(_params, _session, socket) do
     {:ok, socket}
@@ -12,7 +13,7 @@ defmodule ErsventajaWeb.InsurersLive do
       body { margin: 0; padding: 0; font-family: 'Playfair Display', Georgia, serif; color: #504f4f; }
 
       /* Content */
-      .main-content { padding-top: 50px; background-color: white; min-height: 100vh; }
+      .main-content { background-color: white; min-height: 100vh; }
       .section { padding: 4em 2em; text-align: center; }
       .section-title { font-size: 42px; font-weight: 400; letter-spacing: 2px; margin-bottom: 1.5em; color: #504f4f; }
 
@@ -24,6 +25,7 @@ defmodule ErsventajaWeb.InsurersLive do
     </style>
 
     <.navbar />
+    <.hero title="RS Ventaja" subtitle="Corretora de Seguros" />
 
     <div class="main-content">
       <section class="section">

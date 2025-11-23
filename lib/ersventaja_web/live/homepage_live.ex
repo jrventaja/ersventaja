@@ -1,6 +1,7 @@
 defmodule ErsventajaWeb.HomepageLive do
   use ErsventajaWeb, :live_view
   import ErsventajaWeb.Components.Navbar
+  import ErsventajaWeb.Components.Hero
 
   def mount(_params, _session, socket) do
     {:ok, socket}
@@ -14,9 +15,6 @@ defmodule ErsventajaWeb.HomepageLive do
       .homepage-wrapper { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
       .homepage-wrapper .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important; }
 
-      /* Hero */
-      .hero-section { margin-top: 50px; height: 350px; width: 100% !important; max-width: 100% !important; background-color: rgb(39, 39, 39); display: flex; align-items: center; justify-content: center; position: relative; }
-
       /* Content */
       .main-content { background-color: white; width: 100% !important; max-width: 100% !important; }
       .section { padding: 3em 2em; text-align: center; width: 100% !important; max-width: 100% !important; }
@@ -27,15 +25,7 @@ defmodule ErsventajaWeb.HomepageLive do
 
     <div class="homepage-wrapper" style="width: 100%; max-width: 100%; margin: 0; padding: 0;">
       <.navbar />
-
-      <!-- Hero Section -->
-      <div class="hero-section">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-          <img alt="RS Ventaja" src="/images/rs_logo_transparent.png" width="140" height="140" style="margin-bottom: 1.5em;" />
-          <h1 style="font-size: 48px; margin: 0; font-weight: 400; color: white; letter-spacing: 2px; font-family: 'Playfair Display', Georgia, serif;">RS Ventaja</h1>
-          <p style="font-size: 20px; font-style: italic; margin: 0.5em 0 0 0; color: white; font-family: 'Playfair Display', Georgia, serif;">Corretora de Seguros</p>
-        </div>
-      </div>
+      <.hero title="RS Ventaja" subtitle="Corretora de Seguros" />
 
       <!-- Main Content -->
       <div class="main-content" style="width: 100%;">

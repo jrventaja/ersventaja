@@ -256,6 +256,9 @@ defmodule ErsventajaWeb.ControlPanelLive do
       .btn-primary { background: linear-gradient(90deg, #3D5FA3 0%, #4A7AC2 35%, #5B9BD5 70%, #7DCDEB 100%); color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5em; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s; font-family: 'Playfair Display', Georgia, serif; font-size: 16px; }
       .btn-primary:hover { background: rgba(255, 255, 255, 0.85); color: #1e3a6e; font-weight: 600; border: 1px solid #7DCDEB; }
       .btn-primary i { margin: 0; }
+      .btn-danger { background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%); color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; font-family: 'Playfair Display', Georgia, serif; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5em; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s; }
+      .btn-danger:hover { background: rgba(255, 255, 255, 0.9); color: #991b1b; font-weight: 600; border: 1px solid #fca5a5; }
+      .btn-danger i { margin: 0; }
 
       /* Tables */
       .table-container { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 2em; margin: 2em 0; }
@@ -502,7 +505,8 @@ defmodule ErsventajaWeb.ControlPanelLive do
                           href={file_url(policy.file_name)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          style="color: #3D5FA3; text-decoration: none; font-weight: 500;"
+                          class="btn-primary"
+                          style="padding: 8px 16px; font-size: 14px;"
                         >
                           <i class="fas fa-file-pdf"></i> Abrir
                         </a>
@@ -572,7 +576,7 @@ defmodule ErsventajaWeb.ControlPanelLive do
                         <td><%= format_date(policy.start_date) %></td>
                         <td><%= format_date(policy.end_date) %></td>
                         <td>
-                          <a href={file_url(policy.file_name)} target="_blank" rel="noopener noreferrer" style="color: #3D5FA3; text-decoration: none; font-weight: 500;">
+                          <a href={file_url(policy.file_name)} target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 8px 16px; font-size: 14px;">
                             <i class="fas fa-file-pdf"></i> Abrir
                           </a>
                         </td>
@@ -636,11 +640,11 @@ defmodule ErsventajaWeb.ControlPanelLive do
                         <td><%= format_date(policy.start_date) %></td>
                         <td><%= format_date(policy.end_date) %></td>
                         <td>
-                          <div style="display: flex; gap: 1em;">
-                            <a href={file_url(policy.file_name)} target="_blank" rel="noopener noreferrer" style="color: #3D5FA3; text-decoration: none; font-weight: 500;">
+                          <div style="display: flex; align-items: center; gap: 0.75em;">
+                            <a href={file_url(policy.file_name)} target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 8px 16px; font-size: 14px;">
                               <i class="fas fa-file-pdf"></i> Abrir
                             </a>
-                            <button phx-click="delete_policy" phx-value-id={policy.id} style="color: #dc2626; background: none; border: none; cursor: pointer; font-weight: 500; font-family: 'Playfair Display', Georgia, serif;">
+                            <button phx-click="delete_policy" phx-value-id={policy.id} class="btn-danger">
                               <i class="fas fa-trash-alt"></i> Excluir
                             </button>
                           </div>
@@ -831,9 +835,7 @@ defmodule ErsventajaWeb.ControlPanelLive do
                             <button
                               phx-click="delete_insurer"
                               phx-value-id={insurer.id}
-                              style="color: #dc2626; background: none; border: none; cursor: pointer; font-weight: 500; font-family: 'Playfair Display', Georgia, serif; padding: 0.5em 1em; border-radius: 4px; transition: all 0.2s;"
-                              onmouseover="this.style.backgroundColor='#fee2e2'"
-                              onmouseout="this.style.backgroundColor='transparent'"
+                              class="btn-danger"
                             >
                               <i class="fas fa-trash-alt"></i> Excluir
                             </button>
