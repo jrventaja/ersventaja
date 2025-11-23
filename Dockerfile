@@ -78,29 +78,53 @@ RUN echo "=== Compiling dependencies ===" && \
     echo "" && \
     echo "=== Looking for idna ===" && \
     find _build -name idna -type d 2>/dev/null && \
-    if [ -d "_build/${MIX_ENV}/deps/idna" ]; then \
-      echo "=== idna directory exists ===" && \
-      ls -la _build/${MIX_ENV}/deps/idna/ && \
-      if [ ! -f "_build/${MIX_ENV}/deps/idna/ebin/idna.app" ]; then \
-        echo "=== idna.app not found, attempting manual compilation ===" && \
-        cd _build/${MIX_ENV}/deps/idna && \
-        echo "=== Running rebar3 bare compile ===" && \
-        /opt/mix/elixir/1-14/rebar3 bare compile --paths /app/_build/${MIX_ENV}/lib/*/ebin -v 2>&1 || \
-        (echo "=== bare compile failed, trying regular compile ===" && \
-         /opt/mix/elixir/1-14/rebar3 compile -v 2>&1) && \
-        cd /app; \
-      fi; \
+    echo "" && \
+    echo "=== Checking source deps/idna ===" && \
+    if [ -d "deps/idna" ]; then \
+      echo "=== Found deps/idna source ===" && \
+      ls -la deps/idna/ && \
+      echo "" && \
+      echo "=== Attempting to compile idna from source ===" && \
+      cd deps/idna && \
+      echo "=== Current directory: $(pwd) ===" && \
+      echo "=== Contents ===" && \
+      ls -la && \
+      echo "" && \
+      echo "=== rebar.config ===" && \
+      cat rebar.config 2>/dev/null || echo "No rebar.config" && \
+      echo "" && \
+      echo "=== Running rebar3 bare compile (exact command mix uses) ===" && \
+      /opt/mix/elixir/1-14/rebar3 bare compile --paths /app/_build/${MIX_ENV}/lib/*/ebin -v 2>&1 | tee /tmp/rebar3_output.log; \
+      REBAR_EXIT=$?; \
+      if [ $REBAR_EXIT -ne 0 ]; then \
+        echo "" && \
+        echo "=== rebar3 bare compile failed with exit code $REBAR_EXIT ===" && \
+        echo "=== Full rebar3 output ===" && \
+        cat /tmp/rebar3_output.log && \
+        echo "" && \
+        echo "=== Trying regular rebar3 compile ===" && \
+        /opt/mix/elixir/1-14/rebar3 compile -v 2>&1 | tee /tmp/rebar3_regular.log; \
+        REGULAR_EXIT=$?; \
+        if [ $REGULAR_EXIT -ne 0 ]; then \
+          echo "" && \
+          echo "=== Regular compile also failed ===" && \
+          cat /tmp/rebar3_regular.log; \
+        fi; \
+      fi && \
+      cd /app; \
     else \
-      echo "=== ERROR: idna directory not found ===" && \
-      echo "This means mix deps.get did not fetch idna or compilation failed before creating the directory" && \
+      echo "=== ERROR: deps/idna source directory not found ===" && \
       exit 1; \
     fi && \
     echo "" && \
     echo "=== Final check: idna.app must exist ===" && \
-    test -f _build/${MIX_ENV}/deps/idna/ebin/idna.app || \
-    (echo "=== ERROR: idna.app still not found after compilation attempts ===" && \
-     ls -la _build/${MIX_ENV}/deps/idna/ 2>/dev/null && \
-     ls -la _build/${MIX_ENV}/deps/idna/ebin/ 2>/dev/null || echo "ebin does not exist" && \
+    (test -f _build/${MIX_ENV}/deps/idna/ebin/idna.app || \
+     test -f _build/${MIX_ENV}/lib/idna/ebin/idna.app) || \
+    (echo "=== ERROR: idna.app not found in either location ===" && \
+     echo "Checking _build/${MIX_ENV}/deps/idna:" && \
+     ls -la _build/${MIX_ENV}/deps/idna/ 2>/dev/null || echo "deps/idna does not exist" && \
+     echo "Checking _build/${MIX_ENV}/lib/idna:" && \
+     ls -la _build/${MIX_ENV}/lib/idna/ 2>/dev/null || echo "lib/idna does not exist" && \
      exit 1)
 
 # Verify idna compiled successfully and show details if it didn't
