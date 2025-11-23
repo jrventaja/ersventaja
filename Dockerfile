@@ -59,43 +59,51 @@ RUN echo "=== Verifying rebar3 ===" && \
 # Create necessary paths
 RUN mkdir -p /app/_build/${MIX_ENV}/lib
 
+# Check what dependencies were fetched
+RUN echo "=== Checking fetched dependencies ===" && \
+    ls -la deps/ 2>/dev/null | head -20 || echo "deps directory does not exist" && \
+    echo "=== Checking _build deps ===" && \
+    ls -la _build/${MIX_ENV}/deps/ 2>/dev/null | head -20 || echo "_build deps directory does not exist"
+
 # Try to compile dependencies - capture full output
 RUN echo "=== Compiling dependencies ===" && \
-    (mix deps.compile 2>&1 | tee /tmp/deps_compile.log) || \
-    (echo "=== mix deps.compile failed ===" && \
-     echo "=== Full output: ===" && \
-     cat /tmp/deps_compile.log && \
-     echo "" && \
-     echo "=== Attempting to compile idna manually ===" && \
-     if [ -d "_build/${MIX_ENV}/deps/idna" ]; then \
-       cd _build/${MIX_ENV}/deps/idna && \
-       echo "=== idna directory: $(pwd) ===" && \
-       echo "=== Contents: ===" && \
-       ls -la && \
-       echo "" && \
-       echo "=== rebar.config: ===" && \
-       cat rebar.config 2>/dev/null || echo "No rebar.config" && \
-       echo "" && \
-       echo "=== Running rebar3 bare compile (as mix does) ===" && \
-       /opt/mix/elixir/1-14/rebar3 bare compile --paths /app/_build/${MIX_ENV}/lib/*/ebin -v 2>&1 | tee /tmp/rebar3_bare.log || \
-       (echo "=== bare compile failed, output: ===" && \
-        cat /tmp/rebar3_bare.log && \
+    mix deps.compile 2>&1 | tee /tmp/deps_compile.log; \
+    COMPILE_EXIT=$?; \
+    if [ $COMPILE_EXIT -ne 0 ]; then \
+      echo "=== mix deps.compile failed with exit code $COMPILE_EXIT ===" && \
+      echo "=== Full output: ===" && \
+      cat /tmp/deps_compile.log && \
+      echo "" && \
+      echo "=== Checking what deps directories exist ===" && \
+      ls -la _build/${MIX_ENV}/deps/ 2>/dev/null || echo "No deps in _build" && \
+      echo "" && \
+      echo "=== Looking for idna ===" && \
+      find _build -name idna -type d 2>/dev/null || echo "idna not found" && \
+      if [ -d "_build/${MIX_ENV}/deps/idna" ]; then \
+        echo "=== idna directory found, attempting manual compilation ===" && \
+        cd _build/${MIX_ENV}/deps/idna && \
+        echo "=== idna directory: $(pwd) ===" && \
+        echo "=== Contents: ===" && \
+        ls -la && \
         echo "" && \
-        echo "=== Trying regular rebar3 compile ===" && \
-        /opt/mix/elixir/1-14/rebar3 compile -v 2>&1 | tee /tmp/rebar3_regular.log || \
-        (echo "=== regular compile also failed, output: ===" && \
-         cat /tmp/rebar3_regular.log && \
+        echo "=== rebar.config: ===" && \
+        cat rebar.config 2>/dev/null || echo "No rebar.config" && \
+        echo "" && \
+        echo "=== Running rebar3 bare compile (as mix does) ===" && \
+        /opt/mix/elixir/1-14/rebar3 bare compile --paths /app/_build/${MIX_ENV}/lib/*/ebin -v 2>&1 | tee /tmp/rebar3_bare.log || \
+        (echo "=== bare compile failed, output: ===" && \
+         cat /tmp/rebar3_bare.log && \
          echo "" && \
-         echo "=== Checking what was created ===" && \
-         ls -la && \
-         ls -la ebin/ 2>/dev/null || echo "ebin directory does not exist" && \
-         exit 1)); \
-     else \
-       echo "=== idna directory not found ===" && \
-       find _build -name idna -type d && \
-       exit 1; \
-     fi && \
-     cd /app)
+         echo "=== Trying regular rebar3 compile ===" && \
+         /opt/mix/elixir/1-14/rebar3 compile -v 2>&1 | tee /tmp/rebar3_regular.log || \
+         (echo "=== regular compile also failed, output: ===" && \
+          cat /tmp/rebar3_regular.log)); \
+        cd /app; \
+      else \
+        echo "=== idna directory not found - deps.get may have failed ==="; \
+      fi && \
+      exit $COMPILE_EXIT; \
+    fi
 
 # Verify idna compiled successfully and show details if it didn't
 RUN if [ -f _build/${MIX_ENV}/deps/idna/ebin/idna.app ]; then \
