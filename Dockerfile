@@ -8,6 +8,13 @@ RUN apk add --no-cache \
     libc-dev \
     && rm -rf /var/cache/apk/*
 
+# Add swap space to prevent OOM during compilation
+# This is critical for compiling native dependencies like idna on memory-constrained systems
+RUN dd if=/dev/zero of=/swapfile bs=1M count=1024 && \
+    chmod 600 /swapfile && \
+    mkswap /swapfile && \
+    swapon /swapfile
+
 WORKDIR /app
 
 # Install Hex and Rebar
