@@ -49,9 +49,9 @@ services:
     ports:
       - "80:4000"  # Expose directly on port 80, Cloudflare handles SSL
     volumes:
-      - .:/app
-      - /app/web/node_modules
-      - ./html:/app/priv/static/html:ro  # Mount Angular HTML files as static assets
+      # Removed .:/app mount - everything is baked into the image for production
+      # If you need to mount HTML files, uncomment the line below:
+      # - ./html:/app/priv/static/html:ro  # Mount Angular HTML files as static assets
     deploy:
       resources:
         limits:
