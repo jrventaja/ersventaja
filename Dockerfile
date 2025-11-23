@@ -52,48 +52,38 @@ ENV ERL_FLAGS="+JPperf true"
 RUN mix deps.clean --all || true && \
     mix deps.get --only ${MIX_ENV} && \
     echo "=== Verifying rebar3 ===" && \
-    ls -la /opt/mix/elixir/1-14/rebar3* || echo "rebar3 not at expected path" && \
-    /opt/mix/elixir/1-14/rebar3 --version || echo "rebar3 version check failed" && \
+    ls -la /opt/mix/elixir/1-14/rebar3* && \
+    /opt/mix/elixir/1-14/rebar3 --version && \
     echo "=== Creating necessary paths ===" && \
     mkdir -p /app/_build/${MIX_ENV}/lib && \
-    echo "=== Compiling dependencies ===" && \
-    mix deps.compile 2>&1 | tee /tmp/deps_compile.log || \
-    (echo "=== Full compilation output ===" && \
-     tail -100 /tmp/deps_compile.log 2>/dev/null || echo "No log file" && \
-     echo "=== Trying to compile idna manually with detailed output ===" && \
-     if [ -d "_build/${MIX_ENV}/deps/idna" ]; then \
-       cd _build/${MIX_ENV}/deps/idna && \
-       echo "=== Directory: $(pwd) ===" && \
-       echo "=== Contents ===" && \
-       ls -la && \
-       echo "=== rebar.config ===" && \
-       cat rebar.config 2>/dev/null || echo "No rebar.config" && \
-       echo "=== rebar.lock ===" && \
-       cat rebar.lock 2>/dev/null || echo "No rebar.lock" && \
-       echo "=== Trying rebar3 bare compile with exact command mix uses ===" && \
-       /opt/mix/elixir/1-14/rebar3 bare compile --paths /app/_build/${MIX_ENV}/lib/*/ebin 2>&1 && \
-       echo "=== bare compile succeeded ===" || \
-       (echo "=== bare compile failed, trying regular compile ===" && \
-        /opt/mix/elixir/1-14/rebar3 compile 2>&1 && \
-        echo "=== regular compile succeeded ===" || \
-        (echo "=== Both compile methods failed ===" && \
-         echo "=== Checking if paths exist ===" && \
-         ls -la /app/_build/${MIX_ENV}/lib/ 2>/dev/null || echo "lib directory does not exist" && \
-         exit 1)); \
-     else \
-       echo "=== idna directory not found ===" && \
-       find _build -name idna -type d 2>/dev/null && \
-       exit 1; \
-     fi && \
+    echo "=== Compiling all dependencies ===" && \
+    mix deps.compile && \
+    echo "=== Verifying idna was compiled successfully ===" && \
+    test -f _build/${MIX_ENV}/deps/idna/ebin/idna.app || \
+    (echo "=== idna compilation failed, trying manual compilation ===" && \
+     cd _build/${MIX_ENV}/deps/idna && \
+     echo "=== Running rebar3 bare compile ===" && \
+     /opt/mix/elixir/1-14/rebar3 bare compile --paths /app/_build/${MIX_ENV}/lib/*/ebin && \
      cd /app && \
-     echo "=== Retrying full compilation ===" && \
-     mix deps.compile)
+     test -f _build/${MIX_ENV}/deps/idna/ebin/idna.app || \
+     (echo "=== Manual compilation also failed ===" && \
+      echo "=== idna directory contents ===" && \
+      ls -la _build/${MIX_ENV}/deps/idna/ && \
+      echo "=== Trying regular rebar3 compile ===" && \
+      cd _build/${MIX_ENV}/deps/idna && \
+      /opt/mix/elixir/1-14/rebar3 compile && \
+      cd /app && \
+      test -f _build/${MIX_ENV}/deps/idna/ebin/idna.app || exit 1)) && \
+    echo "=== All dependencies compiled successfully ==="
 
 # Copy application code
 COPY . .
 
-# Compile the application
-RUN mix compile
+# Verify dependencies are compiled before compiling application
+RUN echo "=== Verifying dependencies are compiled ===" && \
+    ls -la _build/${MIX_ENV}/deps/idna/ebin/ 2>/dev/null && \
+    echo "=== Dependencies verified, compiling application ===" && \
+    mix compile
 
 # Build assets (if needed)
 RUN mix assets.deploy || true
