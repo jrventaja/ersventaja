@@ -23,15 +23,6 @@ defmodule ErsventajaWeb.Endpoint do
     only: ~w(assets fonts images favicon.ico robots.txt)
   )
 
-  # Serve Angular app HTML files (when html/ is mounted to priv/static/html in production)
-  # This serves all static assets (JS, CSS, images, etc.) from the Angular build
-  if Application.compile_env(:ersventaja, :serve_html_files, false) do
-    plug(Plug.Static,
-      at: "/",
-      from: {:ersventaja, "priv/static/html"},
-      gzip: true
-    )
-  end
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

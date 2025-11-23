@@ -9,3 +9,6 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+# Create a default user
+Ersventaja.UserManager.create_user(%{username: "user", password: "123"})

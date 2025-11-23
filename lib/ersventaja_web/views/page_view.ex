@@ -1,3 +1,3 @@
 defmodule ErsventajaWeb.PageView do
-  use ErsventajaWeb, :view
+  use Phoenix.HTML
 end

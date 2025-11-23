@@ -33,4 +33,17 @@ defmodule ErsventajaWeb.InsurerController do
   def create(conn, %{"name" => name}) do
     resp_json(conn, Policies.add_insurer(name))
   end
+
+  operation :delete,
+    description: "Delete insurer",
+    tags: ["insurer"],
+    responses: %{
+      200 => {"Success", "application/json", %{}}
+    },
+    security: [%{"bearerAuth" => []}]
+
+  def delete(conn, %{"id" => id}) do
+    Policies.delete_insurer(String.to_integer(id))
+    resp_json(conn, %{success: true})
+  end
 end

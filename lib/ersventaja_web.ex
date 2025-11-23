@@ -22,7 +22,7 @@ defmodule ErsventajaWeb do
       use Phoenix.Controller, namespace: ErsventajaWeb
 
       import Plug.Conn
-      import ErsventajaWeb.Gettext
+      use Gettext, backend: ErsventajaWeb.Gettext
       import ErsventajaWeb.JsonApi
       alias ErsventajaWeb.Router.Helpers, as: Routes
     end
@@ -46,8 +46,9 @@ defmodule ErsventajaWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {ErsventajaWeb.LayoutView, "live.html"}
+        layout: {ErsventajaWeb.LayoutView, :live}
 
+      import Phoenix.LiveView
       unquote(view_helpers())
     end
   end
@@ -81,7 +82,7 @@ defmodule ErsventajaWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import ErsventajaWeb.Gettext
+      use Gettext, backend: ErsventajaWeb.Gettext
     end
   end
 
@@ -93,11 +94,11 @@ defmodule ErsventajaWeb do
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.LiveView.Helpers
 
-      # Import basic rendering functionality (render, render_layout, etc)
-      import Phoenix.View
+      # Import Component helpers for LiveView
+      import Phoenix.Component
 
       import ErsventajaWeb.ErrorHelpers
-      import ErsventajaWeb.Gettext
+      use Gettext, backend: ErsventajaWeb.Gettext
       alias ErsventajaWeb.Router.Helpers, as: Routes
     end
   end

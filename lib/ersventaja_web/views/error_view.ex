@@ -1,5 +1,7 @@
 defmodule ErsventajaWeb.ErrorView do
-  use ErsventajaWeb, :view
+  def render(template, _assigns) do
+    Phoenix.Controller.status_message_from_template(template)
+  end
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.

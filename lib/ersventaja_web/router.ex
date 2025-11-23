@@ -24,6 +24,14 @@ defmodule ErsventajaWeb.Router do
 
   scope "/", ErsventajaWeb do
     pipe_through(:browser)
+
+    live "/", HomepageLive, :index
+    live "/produtos", ProductsLive, :index
+    live "/seguradoras", InsurersLive, :index
+    live "/contato", ContactLive, :index
+    live "/login", LoginLive, :index
+    get "/session", SessionController, :set_session
+    live "/controlpanel", ControlPanelLive, :index
   end
 
   # Other scopes may use custom stacks.
@@ -65,6 +73,7 @@ defmodule ErsventajaWeb.Router do
   scope "/api" do
     pipe_through(:api)
 
+    get("/health", ErsventajaWeb.HealthController, :health)
     post("/login", AuthenticationController, :login)
     get("/openapi", OpenApiSpex.Plug.RenderSpec, [])
 
@@ -72,6 +81,7 @@ defmodule ErsventajaWeb.Router do
       pipe_through(:auth)
       post("/insurers", InsurerController, :create)
       get("/insurers", InsurerController, :list)
+      delete("/insurers/:id", InsurerController, :delete)
       post("/policies", PolicyController, :create)
       put("/policies/:id", PolicyController, :update_status)
       get("/policies/last-30-days", PolicyController, :last_30_days)
@@ -80,12 +90,4 @@ defmodule ErsventajaWeb.Router do
     end
   end
 
-  # Serve Angular app index.html for all non-API routes (SPA fallback)
-  # This must come after the API scope but catch all remaining routes
-  if Application.compile_env(:ersventaja, :serve_html_files, false) do
-    scope "/", ErsventajaWeb do
-      pipe_through(:browser)
-      get("/*path", PageController, :index)
-    end
-  end
 end

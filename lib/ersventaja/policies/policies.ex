@@ -29,6 +29,11 @@ defmodule Ersventaja.Policies do
     Repo.all(Insurer)
   end
 
+  def delete_insurer(id) do
+    insurer = Repo.get!(Insurer, id)
+    Repo.delete!(insurer)
+  end
+
   def add_policy(attrs) do
     with request <- RequestAdapter.create_policy_request(attrs) do
       policy =
